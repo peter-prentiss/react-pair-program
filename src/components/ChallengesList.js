@@ -8,9 +8,7 @@ const ChallengesList = (props) => {
       {props.challenges.map((challenge, i) => {
         return (
           <ListGroupItem key={i}>
-            <Link to={`/rooms/${challenge.id}`}>
-              {challenge.title}
-            </Link>
+            <Link to={`/rooms/${challenge.id}`}>{challenge.title}</Link>
           </ListGroupItem>
         )
       })}
