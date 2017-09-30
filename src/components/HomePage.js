@@ -3,7 +3,7 @@ import { Link, browserHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as challengesActions from '../actions/challengesActions';
-import * as userActions fro '../actions/userActions';
+import * as userActions from '../actions/userActions';
 import ChallengesList from './ChallengesList';
 import ChooseUserName from './ChooseUserName';
 

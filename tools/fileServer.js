@@ -1,34 +1,27 @@
 import express from 'express';
-import webpack from 'webpack';
 import path from 'path';
-import config from '../webpack.config.dev';
 import open from 'open';
-import favicon from 'serve-favicon';
+import compression from 'compression';
 
-/* eslint-disable no-console */
+/*eslint-disable no-console*/
 
-const port = 3000;
+const port = process.env.port || 3000;
 const app = express();
-const compiler = webpack(config);
 
-app.use(require('webpack-dev-middleware')(compiler, {
-  noInfo: true,
-  publicPath: config.output.publicPath
-}));
-
-app.use(require('webpack-hot-middleware')(compiler));
+app.use(compression());
+app.use(express.static('public'));
 
 app.get('*', function(req, res) {
-  res.sendFile(path.join(__dirname, '../src/index.html'));
+  res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 const server = app.listen(port, function(err) {
-  if(err) {
+  if (err) {
     console.log(err);
   } else {
-    open(`http:localhost:${port}`);
+    open(`http://localhost:${port}`);
   }
-})
+});
 
 const io = require('socket.io')(server);
 
@@ -36,7 +29,7 @@ io.on('connection', socket => {
   console.log('a user connected');
 
   socket.on('disconnect', () => {
-    console.log('a user disconnected');
+    console.log('user disconnected');
   });
 
   socket.on('room', data => {
@@ -45,7 +38,7 @@ io.on('connection', socket => {
     console.log(data);
     socket.broadcast.to(data.room).emit('load users and code');
     socket.broadcast.to(data.room).emit('new user join', data.user);
-  })
+  });
 
   socket.on('leave room', data => {
     socket.broadcast.to(data.room).emit('user left room', {user: data.user});
@@ -62,7 +55,7 @@ io.on('connection', socket => {
     socket.broadcast.to(data.room).emit('receive change mode', data.mode);
   });
 
-  socket.on('send users and code', data => {
+  socket.on('change users and code', data => {
     socket.broadcast.to(data.room).emit('receive users and code', data);
   });
-});
+})

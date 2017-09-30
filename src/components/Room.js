@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 const io = require('socket.io-client')
 const socket = io()
 import Codemirror from 'react-codemirror';
